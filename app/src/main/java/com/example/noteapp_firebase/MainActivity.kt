@@ -19,11 +19,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var save: Button
     lateinit var note: EditText
     lateinit var recycle: RecyclerView
-    lateinit var list:ArrayList<Note>
 
    lateinit var myViewModel :MyViewModel
 
-    val db = Firebase.firestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +31,11 @@ class MainActivity : AppCompatActivity() {
         note=findViewById(R.id.ednote)
         save=findViewById(R.id.btnsave)
         recycle=findViewById(R.id.rv)
-        list= arrayListOf()
 
         myViewModel=ViewModelProvider(this).get(MyViewModel::class.java)
 
 
         myViewModel.getNotes().observe(this){
-
 
             updatedrecycle(it) }
 
@@ -62,12 +59,10 @@ class MainActivity : AppCompatActivity() {
 
                 recycle.adapter = RVAdapter(this, list)
                 recycle.layoutManager = LinearLayoutManager(this)
+         Toast.makeText(applicationContext, "Something went wrong", Toast.LENGTH_SHORT).show()
 
 
             }
-           // .addOnFailureListener {
-              //  Toast.makeText(applicationContext, "Something went wrong", Toast.LENGTH_SHORT).show() }
-
 
 
     fun update(n:Note) {

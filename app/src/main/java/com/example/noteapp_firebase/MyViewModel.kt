@@ -12,25 +12,24 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MyViewModel (activity: Application): AndroidViewModel(activity){
+class MyViewModel (activity: Application): AndroidViewModel(activity) {
 
-    private val notes:MutableLiveData<List<Note>> = MutableLiveData()
+    private val notes: MutableLiveData<List<Note>> = MutableLiveData()
 
-    val db= Firebase.firestore
+    val db = Firebase.firestore
 
 
-
-        fun getNotes() : LiveData<List<Note>> = notes
+    fun getNotes(): LiveData<List<Note>> = notes
 
 
     fun getNotesFromDB() {
         val list = arrayListOf<Note>()
-        db.collection("Notes")
+        db.collection("notes")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result)
-                    document.data.map {
-                            (_,value) -> list.add(Note(document.id,value.toString()))
+                    document.data.map { (_, value) ->
+                        list.add(Note(document.id, value.toString()))
                     }
                 notes.postValue(list)
             }
@@ -39,8 +38,6 @@ class MyViewModel (activity: Application): AndroidViewModel(activity){
             }
 
     }
-
-
 
 
     fun addNotes(n: Note) {
@@ -65,22 +62,23 @@ class MyViewModel (activity: Application): AndroidViewModel(activity){
         {
             db.collection("notes").document(n.id)
                 .update("note", n.note)
-                .addOnSuccessListener {  }
-                .addOnFailureListener {  }
+                .addOnSuccessListener { }
+                .addOnFailureListener { }
 
         }
+        getNotesFromDB()
     }
 
-    fun deleteNotes(n:Note) {
+    fun deleteNotes(n: Note) {
         GlobalScope.launch(Main)
         {
             db.collection("notes").document(n.id)
                 .delete()
-                .addOnSuccessListener {  }
-                .addOnFailureListener {  }
+                .addOnSuccessListener { }
+                .addOnFailureListener { }
 
 
         }
+        getNotesFromDB()
     }
-    }
-
+}
